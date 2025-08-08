@@ -1,0 +1,45 @@
+load("@com_github_dtolnay_cxx//tools/bazel:rust_cxx_bridge.bzl", "rust_cxx_bridge")
+load("@rules_cc:defs.bzl", "cc_library")
+load(
+    "@rules_rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+)
+
+# rust -> bridge_rs -> bridge_cc -> cpp
+rust_binary(
+    name = "r2c",
+    srcs = ["bin.rs"],
+    deps = [
+        ":bridge_cc",
+        ":bridge_rs",
+        ":hello_cpp",
+    ],
+)
+
+rust_library(
+    name = "bridge_rs",
+    srcs = ["bridge.rs"],
+    deps = [
+        ":hello_hdr",
+        "@com_github_dtolnay_cxx//:cxx",
+    ],
+)
+
+rust_cxx_bridge(
+    name = "bridge_cc",
+    src = "bridge.rs",
+    deps = [":hello_hdr"],
+)
+
+cc_library(
+    name = "hello_cpp",
+    srcs = ["hello.cpp"],
+    deps = [":hello_hdr"],
+)
+
+cc_library(
+    name = "hello_hdr",
+    hdrs = ["hello.h"],
+    deps = ["@com_github_dtolnay_cxx//:core"],
+)

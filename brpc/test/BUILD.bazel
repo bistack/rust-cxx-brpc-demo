@@ -1,0 +1,15 @@
+load("@rules_rust:defs.bzl", "rust_test")
+
+rust_test(
+    name = "brpc_test",
+    size = "small",
+    srcs = ["brpc.rs"],
+    deps = [
+        "//brpc/client",
+        "//brpc/client:bridge_cs",
+        "//brpc/msg:echo_cc",
+        "//brpc/server",
+        "//brpc/server:bridge_server",
+        "//brpc/server:brpc_server_cc",
+    ],
+)

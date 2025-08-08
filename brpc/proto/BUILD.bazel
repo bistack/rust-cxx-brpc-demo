@@ -1,0 +1,16 @@
+load("@rules_cc:defs.bzl", "cc_brpc_library")
+load("@rules_proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "echo_proto",
+    srcs = ["echo.proto"],
+    deps = ["@com_google_googleapis//google/api:field_behavior_proto"],
+)
+
+cc_brpc_library(
+    name = "echo_brpc",
+    protos = [":echo_proto"],
+    strip_include_prefix = "echo_brpc_pb/brpc/proto",
+    visibility = ["//brpc:__subpackages__"],
+    deps = ["@com_google_googleapis//google/api:field_behavior_cc_proto"],
+)

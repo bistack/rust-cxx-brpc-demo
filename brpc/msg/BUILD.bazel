@@ -1,0 +1,18 @@
+load("@rules_cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "echo_hdr",
+    hdrs = ["echo.h"],
+    visibility = ["//brpc:__subpackages__"],
+    deps = [
+        "//brpc/proto:echo_brpc",
+        "@com_github_dtolnay_cxx//:core",
+    ],
+)
+
+cc_library(
+    name = "echo_cc",
+    srcs = ["echo.cc"],
+    visibility = ["//brpc:__subpackages__"],
+    deps = [":echo_hdr"],
+)

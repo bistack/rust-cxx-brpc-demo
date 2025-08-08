@@ -1,0 +1,46 @@
+load("@com_github_dtolnay_cxx//tools/bazel:rust_cxx_bridge.bzl", "rust_cxx_bridge")
+load("@rules_cc:defs.bzl", "cc_library")
+load(
+    "@rules_rust:defs.bzl",
+    "rust_library",
+    "rust_test",
+)
+
+cc_library(
+    name = "client_cc",
+    srcs = ["client.cc"],
+    hdrs = ["client.h"],
+    deps = [
+        ":bridge_cs/include",
+        "//brpc/msg:echo_hdr",
+        "//brpc/proto:echo_brpc",
+        "@com_github_apache_brpc//:brpc",
+    ],
+)
+
+rust_library(
+    name = "client",
+    srcs = ["bridgecs.rs"],
+    visibility = ["//brpc:__subpackages__"],
+    deps = [
+        "@com_github_dtolnay_cxx//:cxx",
+        "@crate_index//:anyhow",
+    ],
+)
+
+rust_cxx_bridge(
+    name = "bridge_cs",
+    src = "bridgecs.rs",
+    visibility = ["//brpc:__subpackages__"],
+    deps = [":client_cc"],
+)
+
+rust_test(
+    name = "test",
+    size = "small",
+    crate = ":client",
+    deps = [
+        ":bridge_cs",
+        "//brpc/msg:echo_cc",
+    ],
+)

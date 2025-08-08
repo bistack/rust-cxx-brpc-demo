@@ -1,0 +1,24 @@
+syntax = "proto3";
+package echo.v1;
+
+import "google/api/field_behavior.proto";
+
+option cc_generic_services = true;
+
+// EchoService echos back messages.
+service EchoService {
+  // Echoes back the provided message.
+  rpc DoEcho(EchoRequest) returns (EchoResponse);
+};
+
+// Request message for echoing a string.
+message EchoRequest {
+  // The message to echo.
+  string message = 1 [(google.api.field_behavior) = REQUIRED];
+};
+
+// Response message containing the echoed string.
+message EchoResponse {
+  // The echoed message.
+  string message = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+};
